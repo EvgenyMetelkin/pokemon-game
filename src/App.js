@@ -2,6 +2,8 @@ import HeaderBlock from './components/HeaderBlock/';
 import LayoutBlock from './components/LayoutBlock/';
 import FooterBlock from './components/FooterBlock/';
 
+import BackgroundLayout from "./assets/bg3.jpg";
+
 const App = () => {
   return (
     <>
@@ -13,7 +15,7 @@ const App = () => {
         id = "firstLayout" 
         title = "First"
         desc = "First Layout"
-        urlBg = "../../assets/bg3.jpg"
+        urlBg = { BackgroundLayout }
       />
       <LayoutBlock 
         id = "secondLayout" 
@@ -25,7 +27,7 @@ const App = () => {
         id = "thirdLayout" 
         title = "Third"
         desc = "Third Layout"
-        urlBg = "../../assets/bg3.jpg" 
+        urlBg = { BackgroundLayout } 
       />
       <FooterBlock />
     </>

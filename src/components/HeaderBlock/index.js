@@ -1,6 +1,6 @@
 import s from  './style.module.css';
 
-const HeaderBlock = ({title, descr}) => {
+const HeaderBlock = ({ title, descr }) => {
     return (
         <header className={s.root}>
             <div className={s.forest}></div>
