@@ -2,22 +2,20 @@ import { useState } from 'react';
 
 import MenuBlock from './Menu';
 import NavbarBlock from './Navbar';
-
-import s from  './style.module.css';
-
-const MenuHeaderBlock = () => {
-    const [isActive, setActive] = useState(false)
+ 
+const MenuHeaderBlock = ({ bgActive }) => {
+    const [isActive, setActive] = useState(null);
 
     const handleClickButton = () => {
-        setActive(!isActive);
-    }
+        setActive(prevState => !prevState);
+    };
 
     return (
         <>
-            <MenuBlock isActive = {isActive}/>
-            <NavbarBlock isActive = {isActive} onClickNavbar = {handleClickButton}/>
+            <MenuBlock isActive = {isActive} onClickLink = {handleClickButton} />
+            <NavbarBlock isActive = {isActive} bgActive={bgActive} onClickNavbar = {handleClickButton} />
         </> 
-    )
+    );
 };
 
 export default MenuHeaderBlock;
