@@ -5,8 +5,10 @@ import cn from 'classnames';
 import s from  './style.module.css';
 
 
-const PokemonCard = ({id, name, img, type, values, isActive, onClickCard}) => {   
-
+const PokemonCard = ({
+    id, name, img, type, 
+    values, isActive, onClickCard}) => {   
+ 
     const onClick = () => {
         onClickCard && onClickCard(id);
     };
