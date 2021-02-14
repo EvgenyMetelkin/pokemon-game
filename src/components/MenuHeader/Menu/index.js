@@ -1,28 +1,30 @@
 import cn from 'classnames';
-import {Link} from 'react-router-dom';
+
+import {useHistory} from 'react-router-dom';
 
 import s from  './style.module.css';
 
 const MENU = [
   {
     title: "HOME",
-    to: "home",
+    to: "/home",
   },
   {
     title: "GAME",
-    to: "game",
+    to: "/game",
   },
   {
     title: "ABOUT",
-    to: "about",
+    to: "/about",
   },
   {
     title: "CONTACT",
-    to: "contact",
+    to: "/contact",
   },
 ];
 
 const MenuBlock = ({isActive, onClickLink}) => { 
+    const history = useHistory();
 
     return (
         <div className={cn(s.menuContainer, {
@@ -34,10 +36,11 @@ const MenuBlock = ({isActive, onClickLink}) => {
             <ul>
               {
                   MENU.map(({title, to}, index) => (
-                    <li key={index}>
-                      <Link to={to} onClick={onClickLink} >
-                        {title}
-                      </Link>
+                    <li className={s.link} key={index} onClick={() => {
+                      onClickLink(); 
+                      history.push(to)}} 
+                    >
+                        {title} 
                     </li>
                   ))
               } 

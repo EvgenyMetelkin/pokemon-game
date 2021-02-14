@@ -9,34 +9,6 @@ import { PokemonContext } from '../../../../context/pokemonContext';
 
 import s from  './style.module.css';
 
-const NEWPOKENON = {
-  "abilities": [
-    "keen-eye",
-    "tangled-feet",
-    "big-pecks"
-  ],
-  "stats": {
-    "hp": 63,
-    "attack": 60,
-    "defense": 55,
-    "special-attack": 50,
-    "special-defense": 50,
-    "speed": 71
-  },
-  "type": "flying",
-  "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/17.png",
-  "name": "pidgeotto",
-  "base_experience": 122,
-  "height": 11,
-  "id": 17,
-  "values": {
-    "top": "A",
-    "right": 2,
-    "bottom": 7,
-    "left": 5
-  }
-};
-
 const StartPage = () => {
     const history = useHistory();
     const firebase = useContext(FireBaseContext);
@@ -44,25 +16,29 @@ const StartPage = () => {
     const [pokemons, setPokemons] = useState({});  
 
     useEffect(() => {
+      pokemonsContext.onClearContext();
+
+      // console.log("START");
+      // console.log(pokemonsContext.selectedPokemons);
+
       firebase.getPokemonsSoket((pokemons) => {
         setPokemons(pokemons);
-      });  
+      }); 
+      
+      return () => firebase.offPokemonsSoket();
     }, []);
 
-    const cardClick = (id) => {   
+    const cardClick = (key) => {   
+      const pokemon = {...pokemons[key]};
+      pokemonsContext.onSetPokemon(key, pokemon);
 
-      setPokemons(prevState => {
-        return Object.entries(prevState).reduce((acc, item) => {
-            const pokemon = {...item[1]};
-            if (pokemon.id === id) {
-                pokemon.isSelected = true;  
-            }
-    
-            acc[item[0]] = pokemon;
-     
-            return acc;
-        }, {});
-      });
+      setPokemons(prevState => ({
+        ...prevState,
+        [key]: {
+          ...prevState[key],
+          isSelected: !prevState[key].isSelected
+        }        
+      }));
  
     //   setPokemons(prevState => {
     //     return Object.entries(prevState).reduce((acc, item) => {
@@ -80,21 +56,19 @@ const StartPage = () => {
     // });
     };   
      
-    const startGame = () => {
-      let selectedPokemons = [];
-      Object.entries(pokemons).forEach((item) => {   
-          if (item[1].isSelected) {
-            selectedPokemons.push(item[1]);
-          }          
-      });   
-      pokemonsContext.onSetPokemons(selectedPokemons); 
-
+    const startGame = () => { 
       history.push(pokemonsContext.path + "/board");
     };
 
     return (
         <> 
-            <button className={s.button} onClick={startGame}> Start Game </button>
+            <button 
+              className={s.button} 
+              onClick={startGame}
+              disabled={Object.keys(pokemonsContext.selectedPokemons).length !== 5}
+            > 
+              Start Game 
+            </button>
             <LayoutBlock 
               id = "secondLayout" 
               title = "Second"  
@@ -103,7 +77,8 @@ const StartPage = () => {
               <div className={s.flex}>
                 {
                     Object.entries(pokemons).map(([key, {id, name, img, type, values, isSelected}]) =>  
-                      <PokemonCard                 
+                      <PokemonCard  
+                        className={s.card}               
                         key={key} 
                         id={id} 
                         name={name} 
@@ -112,7 +87,11 @@ const StartPage = () => {
                         values={values}      
                         isActive={true}
                         isSelected={isSelected}
-                        onClickCard={cardClick}        
+                        onClickCard={() => {
+                          if(Object.keys(pokemonsContext.selectedPokemons).length < 5 || isSelected) {
+                            cardClick(key);
+                          }
+                        }}        
                       />
                     )
                 }  

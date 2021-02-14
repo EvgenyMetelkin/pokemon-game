@@ -24,6 +24,10 @@
   animation: overlay-slide-out 300ms forwards;
 }
 
+.link {
+  color:#08090c
+}
+
 @keyframes overlay-slide-out {
   from {
     left: 0;
