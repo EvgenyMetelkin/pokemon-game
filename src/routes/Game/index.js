@@ -9,25 +9,45 @@ import {PokemonContext} from '../../context/pokemonContext';
 
 const GamePage = () => {
   const match = useRouteMatch();
+  const[selectedPokemons, setSelectedPokemon] = useState({});
+  const[player1Pokemons, setPlayer1Pokemons] = useState({});
+  const[player2Pokemons, setPlayer2Pokemons] = useState({}); 
+ 
+  const handleSetPokemon = (key, pokemon) => { 
+    setSelectedPokemon(prevState => { 
+      if(prevState[key]) {
+        const copyState = {...prevState};
+        delete copyState[key];
 
-  console.log("11111", match);
-
-  const[selectedPokemons, setSelectedPokemons] = useState([]);
-
-  const handleSetPokemons = (pokemons) => {
-    setSelectedPokemons(prevState => {
-      pokemons.forEach(element => {
-        prevState.push(element);
-      });
-      return prevState;
+        return copyState;
+      }
+      return {
+        ...prevState,
+        [key]: pokemon
+      };
     });  
+  };
+
+  const handleonSetPokemons2Players = (pokemonsPlayer1, pokemonsPlayer2) => {
+    setPlayer1Pokemons(pokemonsPlayer1);
+    setPlayer2Pokemons(pokemonsPlayer2);
+  }; 
+
+  const handleClearContext = () => {
+    setSelectedPokemon({});
+    setPlayer1Pokemons({});
+    setPlayer2Pokemons({}); 
   };
 
   return (
     <PokemonContext.Provider value={{
       selectedPokemons,
-      onSetPokemons: handleSetPokemons,
-      path: match.path
+      onSetPokemon: handleSetPokemon,
+      onSetPokemons2Players: handleonSetPokemons2Players, 
+      player1Pokemons,
+      player2Pokemons,
+      path: match.path,
+      onClearContext: handleClearContext
       }}>
       <Switch>
           <Route path={`${match.path}/`} exact component={StartPage} />
